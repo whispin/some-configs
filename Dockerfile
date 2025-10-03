@@ -2,7 +2,7 @@ FROM alpine:3.20
 ARG TARGETARCH
 ARG TAILSCALE_VERSION=1.88.3
 ARG CLOUDFLARED_VERSION=2025.9.1
-
+USER root
 RUN apk add --no-cache iptables iproute2 ca-certificates bash curl \
   && apk add --no-cache --virtual=.install-deps tar
 
