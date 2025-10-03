@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main   # 触发分支，根据需要修改
-
+permissions:
+  contents: read
+  packages: write   # 👈 必须加这个
 jobs:
   build:
     runs-on: ubuntu-latest
