@@ -6,13 +6,15 @@ RUN apt-get update && apt-get install -y \
     jq \
     unzip \
     ca-certificates \
+    nginx \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Copy config.json template and startup script
+# Copy config.json template, nginx config template and startup script
 COPY config.json /app/config.json
+COPY nginx.conf.template /app/nginx.conf.template
 COPY start.sh /app/start.sh
 
 # Download and install V2Ray binary directly
@@ -24,8 +26,8 @@ RUN curl -L https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-l
     && chmod +x /usr/local/bin/v2ray /app/start.sh \
     && rm -rf /tmp/v2ray /tmp/v2ray.zip
 
-# Expose default port (can be overridden by V2RAY_PORT)
-EXPOSE 9527
+# Expose nginx port (80) and default V2Ray port
+EXPOSE 80 9527
 
 # Run startup script
 CMD ["/app/start.sh"]
