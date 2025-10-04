@@ -4,9 +4,6 @@ set -ex
 # Copy config.json to V2Ray directory
 cp /app/config.json /usr/local/etc/v2ray/config.json
 
-echo "Original config:"
-cat /usr/local/etc/v2ray/config.json
-
 # Replace environment variables in config.json
 if [ -n "$ID" ]; then
     echo "Replacing ID with: $ID"
@@ -30,8 +27,6 @@ if [ -n "$PORT" ]; then
     fi
 fi
 
-echo "Final config:"
-cat /usr/local/etc/v2ray/config.json
 
 # Start V2Ray
 exec /usr/local/bin/v2ray run -c /usr/local/etc/v2ray/config.json
