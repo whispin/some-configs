@@ -4,6 +4,7 @@ FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y \
     curl \
     jq \
+    unzip \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
@@ -13,12 +14,18 @@ WORKDIR /app
 # Copy config.json template
 COPY config.json /app/config.json
 
+# Download and install V2Ray binary directly
+RUN curl -L https://github.com/v2fly/v2ray-core/releases/latest/download/v2ray-linux-64.zip -o /tmp/v2ray.zip \
+    && mkdir -p /usr/local/bin /usr/local/share/v2ray /usr/local/etc/v2ray \
+    && unzip /tmp/v2ray.zip -d /tmp/v2ray \
+    && cp /tmp/v2ray/v2ray /usr/local/bin/ \
+    && cp /tmp/v2ray/geoip.dat /tmp/v2ray/geosite.dat /usr/local/share/v2ray/ \
+    && chmod +x /usr/local/bin/v2ray \
+    && rm -rf /tmp/v2ray /tmp/v2ray.zip
+
 # Create startup script
 RUN printf '#!/bin/bash\n\
 set -e\n\
-\n\
-# Install V2Ray\n\
-bash <(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)\n\
 \n\
 # Copy config.json to V2Ray directory\n\
 cp /app/config.json /usr/local/etc/v2ray/config.json\n\
