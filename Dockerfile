@@ -1,7 +1,11 @@
-FROM alpine:3.20
+FROM debian:bookworm-slim
 
 # Install dependencies
-RUN apk add --no-cache bash curl jq
+RUN apt-get update && apt-get install -y \
+    curl \
+    jq \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
